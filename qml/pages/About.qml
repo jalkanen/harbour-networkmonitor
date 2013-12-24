@@ -16,7 +16,7 @@ Dialog {
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
 
-            text: "(C) Janne Jalkanen 2014.\n\nFor any suggestions, reports, etc.\njalkanen@ecyrd.com\n\nIcon by ipapun\n(ipapun.deviantart.com)"
+            text: "(C) Janne Jalkanen 2014.\n\nFor any suggestions, reports, etc.\njalkanen@ecyrd.com\n\nSource code on GitHub\nhttp://is.gd/7F6yP9\n\nIcon by ipapun\n(ipapun.deviantart.com)"
         }
     }
 }
