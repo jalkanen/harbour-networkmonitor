@@ -9,7 +9,7 @@ and displays the results.
 Made available under the Apache Software License (see LICENSE for
 further information).
 
-Icon by ipapun (http://ipapun.devianart.com).
+Icon by ipapun (http://ipapun.devianart.com). Licensed under CC-BY-2.0.
 
 Thanks to Outi (http://www.helmetti.fi/) for help with Photoshop.
 
