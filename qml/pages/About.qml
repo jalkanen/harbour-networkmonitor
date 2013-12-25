@@ -10,13 +10,20 @@ Dialog {
         height: page.height
         width :page.width
 
-        Label {
+        Text {
             anchors.fill: parent
 
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
 
-            text: "(C) Janne Jalkanen 2014.\n\nFor any suggestions, reports, etc.\njalkanen@ecyrd.com\n\nSource code on GitHub\nhttp://is.gd/7F6yP9\n\nIcon by ipapun\n(ipapun.deviantart.com)"
+            color: Theme.primaryColor
+
+            wrapMode: Text.WordWrap
+
+            text: "<b>(C) Janne Jalkanen 2014.</b><br><br>For any suggestions, reports, etc.<br>
+                   <a href=\"mailto:jalkanen@ecyrd.com\">jalkanen@ecyrd.com</a><br><br>
+                   Source code available on<br><a href=\"http://is.gd/7F6yP9\">GitHub</a><br><br>
+                   Icon by <a href=\"http://ipapun.deviantart.com/\">ipapun</a>"
         }
     }
 }
