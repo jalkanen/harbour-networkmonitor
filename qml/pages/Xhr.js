@@ -2,22 +2,28 @@
 var lastCall;
 var lastinout;
 
-function formatString(inout) {
-    var str = "In: "+format(inout.in)+"\nOut: "+format(inout.out);
+function delta(t0,t1,time) {
+    return Math.round(1000* Math.abs(t1-t0)/time);
+}
+
+function diff(inout) {
+    var diff = { in: 0, out: 0, wlanIn: 0, wlanOut: 0, totalIn: 0, totalOut: 0 }
     var now = new Date().getTime();
 
     if( lastinout ) {
-        var tdiff   = now - lastCall;
-        var indiff  = Math.round(1000 * (inout.in  - lastinout.in) / tdiff);
-        var outdiff = Math.round(1000 * (inout.out - lastinout.out) / tdiff);
-
-        str += "\n\nIn: "+format(indiff)+"/s";
-        str += "\nOut: "+format(outdiff)+"/s";
+        var tdiff = now - lastCall;
+        diff.in       = delta(inout.in,lastinout.in,tdiff);
+        diff.out      = delta(inout.out,lastinout.out,tdiff);
+        diff.wlanIn   = delta(inout.wlanIn,lastinout.wlanIn,tdiff);
+        diff.wlanOut  = delta(inout.wlanOut,lastinout.wlanOut,tdiff);
+        diff.totalIn  = delta(inout.totalIn,lastinout.totalIn,tdiff);
+        diff.totalOut = delta(inout.totalOut,lastinout.totalOut,tdiff);
     }
 
     lastinout = inout;
     lastCall = now;
-    return str;
+
+    return diff;
 }
 
 /**
@@ -29,7 +35,7 @@ function readBytes(callback) {
     xhr.onreadystatechange = function() {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             var pattern = /(\w+):\s*(\d+)\s+\d+\s+\d+\s+\d+\s+\d+\s+\d+\s+\d+\s+\d+\s+(\d+)/
-            var inout = { in: 0, out: 0 };
+            var inout = { in: 0, out: 0, wlanIn: 0, wlanOut: 0 };
 
             var lines = xhr.responseText.split(/\n/);
             var i;
@@ -40,13 +46,21 @@ function readBytes(callback) {
                 var m0 = lines[i].match(pattern);
 
                 if( m0 && m0[1] !== 'lo' ) {
-                    inout.in += parseInt(m0[2]);
-                    inout.out += parseInt(m0[3]);
+                    if( m0[1] === 'wlan' ) {
+                        inout.wlanIn += parseInt(m0[2]);
+                        inout.wlanOut += parseInt(m0[3]);
+                    } else {
+                        inout.in += parseInt(m0[2]);
+                        inout.out += parseInt(m0[3]);
+                    }
                     //console.log("Found "+m0[1]+", in "+m0[2]+", out "+m0[3])
                 } else {
                     //console.log("Ignored "+m0);
                 }
             }
+
+            inout.totalIn  = inout.wlanIn + inout.in;
+            inout.totalOut = inout.wlanOut + inout.out;
 
             callback(inout);
         }
@@ -59,7 +73,7 @@ function readBytes(callback) {
  *  Formats bytes in a sane way
  */
 function format(number) {
-    if( number < 8000 ) {
+    if( number < 2000 ) {
         return number + " B";
     } else if( number < 900000 ) {
         return Math.round(number / 1024) + " kB";

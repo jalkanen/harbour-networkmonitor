@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.1
 import Sailfish.Silica 1.0
 import "Xhr.js" as Xhr
 
@@ -19,21 +19,106 @@ Page {
 
         contentHeight: column.height
 
-        Column {
-            id: column
+        PageHeader {
+            title: "Network bytes"
+        }
+
+        Rectangle {
+            id: topper
+            height: page.height*0.2
+        }
+
+        Grid {
+            id: grid
 
             width: page.width
-            height: page.height
             spacing: Theme.paddingLarge
-            PageHeader {
-                title: "Network bytes"
-            }
+            columns: 3
+            anchors.top: topper.bottom
+            left: Theme.paddingLarge
+
             Label {
+                text: "&nbsp;"
+            }
+
+            Label {
+                text: "In"
+                font.pixelSize: Theme.fontSizeLarge
+            }
+
+            Label {
+                text: "Out"
+                font.pixelSize: Theme.fontSizeLarge
+            }
+
+            // WiFi
+            Label {
+                text: "WiFi"
+                font.pixelSize: Theme.fontSizeLarge
+            }
+
+            Label {
+                id: wifiIn
+                text: "..."
+            }
+
+            Label {
+                id: wifiOut
+                text: "..."
+            }
+
+            Label {
+                text: "..."
+            }
+
+            Label {
+                id: wifiInDiff
+                text: "..."
+            }
+
+            Label {
+                id: wifiOutDiff
+                text: "..."
+            }
+
+            // Others
+
+            Label {
+                text: "Others"
+                font.pixelSize: Theme.fontSizeLarge
+            }
+
+            Label {
+                id: oIn
+                text: "..."
+            }
+
+            Label {
+                id: oOut
+                text: "..."
+            }
+
+            Label {
+                text: "..."
+            }
+
+            Label {
+                id: oInDiff
+                text: "..."
+            }
+
+            Label {
+                id: oOutDiff
+                text: "..."
+            }
+
+            /*
+           Label {
                 id: labeloid
                 //x: Theme.paddingLarge
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-                anchors.fill: parent
+
                 text: {
                     Xhr.readBytes(function(inout){
                         labeloid.text = Xhr.formatString(inout);
@@ -43,6 +128,7 @@ Page {
                 color: Theme.primaryColor
                 font.pixelSize: Theme.fontSizeHuge
             }
+            */
         }
         Timer {
             id: timer
@@ -51,7 +137,15 @@ Page {
             repeat: true
             onTriggered: {
                 Xhr.readBytes(function(inout){
-                    labeloid.text = Xhr.formatString(inout);
+                    var diff = Xhr.diff(inout);
+                    wifiIn.text = Xhr.format(inout.wlanIn);
+                    wifiOut.text = Xhr.format(inout.wlanOut);
+                    wifiInDiff.text = Xhr.format(diff.wlanIn);
+                    wifiOutDiff.text = Xhr.format(diff.wlanOut);
+                    oIn.text = Xhr.format(inout.in);
+                    oOut.text = Xhr.format(inout.out);
+                    oInDiff.text = Xhr.format(diff.in);
+                    oOutDiff.text = Xhr.format(diff.out);
                 });
             }
         }
